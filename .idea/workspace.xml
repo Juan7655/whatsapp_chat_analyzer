@@ -14,8 +14,8 @@
       <file leaf-file-name="analyzer.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../whatsapp_chat_analyzer/analyzer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" column="33" lean-forward="true" selection-start-line="15" selection-start-column="33" selection-end-line="15" selection-end-column="33" />
+            <state relative-caret-position="75">
+              <caret line="5" column="18" lean-forward="false" selection-start-line="5" selection-start-column="18" selection-end-line="5" selection-end-column="18" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -49,9 +49,9 @@
         <option value="$PROJECT_DIR$/wa_chat_jp.txt" />
         <option value="$PROJECT_DIR$/histogram.py" />
         <option value="$PROJECT_DIR$/../whatsapp_chat_analyzer/date_manager.py" />
-        <option value="$PROJECT_DIR$/../whatsapp_chat_analyzer/analyzer.py" />
         <option value="$PROJECT_DIR$/../whatsapp_chat_analyzer/wa_chat.txt" />
         <option value="$PROJECT_DIR$/../whatsapp_chat_analyzer/.gitignore" />
+        <option value="$PROJECT_DIR$/../whatsapp_chat_analyzer/analyzer.py" />
       </list>
     </option>
   </component>
@@ -336,8 +336,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../whatsapp_chat_analyzer/analyzer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="33" lean-forward="true" selection-start-line="15" selection-start-column="33" selection-end-line="15" selection-end-column="33" />
+        <state relative-caret-position="75">
+          <caret line="5" column="18" lean-forward="false" selection-start-line="5" selection-start-column="18" selection-end-line="5" selection-end-column="18" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
