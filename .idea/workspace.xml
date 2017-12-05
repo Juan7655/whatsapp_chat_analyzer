@@ -50,8 +50,8 @@
         <option value="$PROJECT_DIR$/histogram.py" />
         <option value="$PROJECT_DIR$/../whatsapp_chat_analyzer/date_manager.py" />
         <option value="$PROJECT_DIR$/../whatsapp_chat_analyzer/analyzer.py" />
-        <option value="$PROJECT_DIR$/../whatsapp_chat_analyzer/wa_chat.txt" />
         <option value="$PROJECT_DIR$/../whatsapp_chat_analyzer/.gitignore" />
+        <option value="$PROJECT_DIR$/../whatsapp_chat_analyzer/wa_chat.txt" />
       </list>
     </option>
   </component>
@@ -310,18 +310,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../whatsapp_chat_analyzer/wa_chat.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="56" lean-forward="false" selection-start-line="0" selection-start-column="56" selection-end-line="0" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../whatsapp_chat_analyzer/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="5" lean-forward="false" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../whatsapp_chat_analyzer/wa_chat.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="40" lean-forward="false" selection-start-line="0" selection-start-column="40" selection-end-line="0" selection-end-column="40" />
           <folding />
         </state>
       </provider>
