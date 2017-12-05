@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import datetime
 import date_manager
 
-start_line = "//--"
+start_line = "//-"
 initial_day = 1
 initial_month = 1
 initial_year = 17
