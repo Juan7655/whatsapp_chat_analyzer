@@ -4,13 +4,17 @@ import datetime
 import date_manager
 
 start_line = "//-"
-initial_day = 1
-initial_month = 1
-initial_year = 17
+initial_day = 15
+initial_month = 12
+initial_year = 15
+date_config = 1
+
+forbidden_keywords = ["added", "left", "changed", "created", "removed", "Creaste", "Añadiste", "Eliminaste",
+                      "cambió el icono", "cambió de", "salió", "Los mensajes en este grupo"]
 
 
 def run():
-	with open("wa_chat.txt") as file:
+	with open("wa_chat(1).txt") as file:
 		file = file.readlines()
 
 	now = datetime.datetime.now()
@@ -18,6 +22,7 @@ def run():
 	data.pop(0)
 	matrix = get_attributes(data)
 	date_array = get_date_array(matrix)
+	print(date_array)
 	date_dist = date_manager.date_distance(matrix[0][0], matrix[0][1], matrix[0][2],
 	                                       date_manager.date_to_str(now.day, now.month, now.year - 2000))
 	seaborn.distplot(date_array, kde=False, bins=date_dist)
@@ -57,44 +62,45 @@ def set_data(file):
 
 def get_attributes(data):
 	matrix = []
-	first_line = True
 	count = 0
 
 	for line in data:
-		if not first_line:
-			if "added" not in line and \
-							"left" not in line and \
-							"changed" not in line and \
-							"created" not in line and \
-							"removed" not in line:
-				split = line.split(", ", 2)
+		accept_line = True
+		for word in forbidden_keywords:
+			if word in line:
+				accept_line = False
+				break
 
-				date = split[0]
-				month = date.split("/")[0]
-				date = date.replace(month + "/", "", 1)
-				day = date.split("/")[0]
-				date = date.replace(day + "/", "", 1)
-				year = date
+		if accept_line:
+			split = line.split(", ", 2)
 
-				line = line.replace(month + "/" + day + "/" + year + ", ", "", 1)
-				split = line.split(" - ", 2)
-				time = split[0]
-				line = line.replace(time + " - ", "", 1)
-				split = line.split(": ", 2)
-				sender = split[0]
+			date = split[0]
+			m_date = [0, 0, 0]
+			m_date[1 - date_config] = int(date.split("/")[0])
+			date = date.replace(str(m_date[0]) + "/", "", 1)
+			m_date[date_config] = int(date.split("/")[0])
+			date = date.replace(str(m_date[1]) + "/", "", 1)
+			m_date[2] = int(date)
+
+			line = line.replace(date_manager.date_to_str(m_date[0], m_date[1], m_date[2]) + ", ", "", 1)
+			time = line.split(" - ", 2)[0]
+			line = line.replace(time + " - ", "", 1)
+			split = line.split(": ", 2)
+			sender = split[0]
+			try:
 				message = split[1]
+			except IndexError:
+				print("")
 
-				matrix.append([int(day), int(month), int(year), time, sender, message])
-				count += 1
-		else:
-			first_line = False
+			matrix.append([m_date[0], m_date[1], m_date[2], time, sender, message])
+			count += 1
 	return matrix
 
 
 def get_date_array(matrix):
 	dates = []
 	current_index = 1
-	day = matrix[0][1]
+	day = matrix[0][0]
 	month = matrix[0][1]
 	year = matrix[0][2]
 
@@ -107,6 +113,7 @@ def get_date_array(matrix):
 	return dates
 
 
+# counts the number of messages for every person in the chat
 def get_people_count(matrix):
 	array = [matrix[0][4]]
 	count = [0]
@@ -122,6 +129,7 @@ def get_people_count(matrix):
 	return mt
 
 
+# counts occurrences of the given words in the chat
 def get_word_count(matrix, word):
 	count = 0
 
