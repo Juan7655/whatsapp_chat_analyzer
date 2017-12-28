@@ -2,6 +2,7 @@ import seaborn
 import matplotlib.pyplot as plt
 import datetime
 import date_manager
+import pandas
 
 start_line = "//-"
 initial_day = 15
@@ -25,8 +26,15 @@ def run():
 	date_array = get_date_array(matrix)
 	date_dist = date_manager.date_distance(matrix[0][0], matrix[0][1], matrix[0][2],
 	                                       date_manager.date_to_str(now.day, now.month, now.year - 2000))
-	seaborn.distplot(date_array, kde=False, bins=date_dist)
 
+	weekday_arr = [(i + date_dist - 1) % 7 for i in date_array["date_dist"]]
+	date_array.insert(0, "weekday", weekday_arr)
+	week_days = [i for i in range(7)]
+	week_day_count = [weekday_arr.count(i) for i in range(7)]
+	plt.bar(week_days, week_day_count, align='center')
+	plt.show()
+
+	seaborn.distplot(date_array["date_dist"], kde=False, bins=date_dist)
 	ppl_count, month_count = get_people_count(matrix)
 	for i in range(len(ppl_count[0])):
 		print(str(ppl_count[0][i]) + ": " + str(ppl_count[1][i]))
@@ -48,6 +56,7 @@ def run():
 	plt.xlabel("Mes")
 	plt.ylabel("Número de mensajes")
 	plt.show()
+	punchcard_matrix(date_array[["weekday", "hour"]])
 
 
 def set_data(file):
@@ -102,7 +111,7 @@ def get_attributes(data):
 
 
 def get_date_array(matrix):
-	dates = []
+	dates = pandas.DataFrame(columns=["date_dist", "hour"])
 	current_index = 1
 	day = matrix[0][0]
 	month = matrix[0][1]
@@ -110,7 +119,8 @@ def get_date_array(matrix):
 
 	for i in matrix:
 		current_index += date_manager.date_distance(day, month, year, date_manager.date_to_str(i[0], i[1], i[2]))
-		dates.append(current_index)
+		df = pandas.DataFrame([[current_index, i[3].split(":")[0]]], columns=["date_dist", "hour"])
+		dates = dates.append(df)
 		day = i[0]
 		month = i[1]
 		year = i[2]
@@ -143,6 +153,16 @@ def get_word_count(matrix, word):
 		if word in i[5]:
 			count += 1
 	return count
+
+
+def punchcard_matrix(matrix):
+	punch_matrix = pandas.DataFrame([[0 for _ in range(24)] for _ in range(7)])
+	for index, row in matrix.iterrows():
+		punch_matrix[int(row["hour"])][int(row["weekday"])] += 1
+	weekdays = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+	punch_matrix.insert(0, "weekday", weekdays)
+	punch_matrix.set_index("weekday")
+	punch_matrix.to_csv("result.csv", index=False)
 
 
 if __name__ == '__main__':
