@@ -10,7 +10,8 @@ initial_year = 15
 date_config = 1
 
 forbidden_keywords = ["added", "left", "changed", "created", "removed", "Creaste", "Añadiste", "Eliminaste",
-                      "cambió el icono", "cambió de", "salió", "Los mensajes en este grupo"]
+                      "cambió el icono", "cambió de", "salió", "Los mensajes en este grupo",
+                      "Messages to this group are now secured"]
 
 
 def run():
@@ -22,12 +23,11 @@ def run():
 	data.pop(0)
 	matrix = get_attributes(data)
 	date_array = get_date_array(matrix)
-	print(date_array)
 	date_dist = date_manager.date_distance(matrix[0][0], matrix[0][1], matrix[0][2],
 	                                       date_manager.date_to_str(now.day, now.month, now.year - 2000))
 	seaborn.distplot(date_array, kde=False, bins=date_dist)
 
-	ppl_count = get_people_count(matrix)
+	ppl_count, month_count = get_people_count(matrix)
 	for i in range(len(ppl_count[0])):
 		print(str(ppl_count[0][i]) + ": " + str(ppl_count[1][i]))
 
@@ -40,6 +40,13 @@ def run():
 		print(i + " count: " + str(temp_count))
 		cnt += temp_count
 	print("Total word count: " + str(cnt))
+	plt.xlabel("Día")
+	plt.ylabel("Número de mensajes")
+	plt.show()
+
+	plt.bar([i for i in range(1, 13)], month_count, align='center')
+	plt.xlabel("Mes")
+	plt.ylabel("Número de mensajes")
 	plt.show()
 
 
@@ -77,9 +84,9 @@ def get_attributes(data):
 			date = split[0]
 			m_date = [0, 0, 0]
 			m_date[1 - date_config] = int(date.split("/")[0])
-			date = date.replace(str(m_date[0]) + "/", "", 1)
+			date = date.replace(str(m_date[1 - date_config]) + "/", "", 1)
 			m_date[date_config] = int(date.split("/")[0])
-			date = date.replace(str(m_date[1]) + "/", "", 1)
+			date = date.replace(str(m_date[date_config]) + "/", "", 1)
 			m_date[2] = int(date)
 
 			line = line.replace(date_manager.date_to_str(m_date[0], m_date[1], m_date[2]) + ", ", "", 1)
@@ -87,10 +94,7 @@ def get_attributes(data):
 			line = line.replace(time + " - ", "", 1)
 			split = line.split(": ", 2)
 			sender = split[0]
-			try:
-				message = split[1]
-			except IndexError:
-				print("")
+			message = split[1]
 
 			matrix.append([m_date[0], m_date[1], m_date[2], time, sender, message])
 			count += 1
@@ -116,6 +120,7 @@ def get_date_array(matrix):
 # counts the number of messages for every person in the chat
 def get_people_count(matrix):
 	array = [matrix[0][4]]
+	month_count = [0 for _ in range(1, 13)]
 	count = [0]
 
 	for i in matrix:
@@ -125,8 +130,9 @@ def get_people_count(matrix):
 		else:
 			array.append(i[4])
 			count.append(1)
+		month_count[i[1] - 1] += 1
 	mt = [array, count]
-	return mt
+	return mt, month_count
 
 
 # counts occurrences of the given words in the chat
