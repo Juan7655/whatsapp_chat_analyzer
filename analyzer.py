@@ -4,12 +4,16 @@ import datetime
 import date_manager
 import pandas
 
+# separation character
 start_line = "//-"
 initial_day = 15
 initial_month = 12
 initial_year = 15
+# date_config = 0 -> mm/dd/yy
+# date_config = 1 -> dd/mm/yy
 date_config = 1
 
+# if the lines contains any word on this list, it will be omitted
 forbidden_keywords = ["added", "left", "changed", "created", "removed", "Creaste", "Añadiste", "Eliminaste",
                       "cambió el icono", "cambió de", "salió", "Los mensajes en este grupo",
                       "Messages to this group are now secured"]
@@ -27,20 +31,29 @@ def run():
 	date_dist = date_manager.date_distance(matrix[0][0], matrix[0][1], matrix[0][2],
 	                                       date_manager.date_to_str(now.day, now.month, now.year - 2000))
 
+	# graphs frequency of messages in every day of the week
 	weekday_arr = [(i + date_dist - 1) % 7 for i in date_array["date_dist"]]
 	date_array.insert(0, "weekday", weekday_arr)
 	week_days = [i for i in range(7)]
 	week_day_count = [weekday_arr.count(i) for i in range(7)]
 	plt.bar(week_days, week_day_count, align='center')
+	plt.xlabel("Día de la semana")
+	plt.ylabel("Número de mensajes")
 	plt.show()
 
+	# graphs frequency of messages on every day
 	seaborn.distplot(date_array["date_dist"], kde=False, bins=date_dist)
+	plt.xlabel("Día")
+	plt.ylabel("Número de mensajes")
+	plt.show()
+
+	# counts messages for every person in the group
 	ppl_count, month_count = get_people_count(matrix)
 	for i in range(len(ppl_count[0])):
 		print(str(ppl_count[0][i]) + ": " + str(ppl_count[1][i]))
-
 	print("---------------------")
 
+	# counts occurrences of the words given in the data matrix
 	word_bank = ["word1", "word2", "word3"]
 	cnt = 0
 	for i in word_bank:
@@ -48,17 +61,18 @@ def run():
 		print(i + " count: " + str(temp_count))
 		cnt += temp_count
 	print("Total word count: " + str(cnt))
-	plt.xlabel("Día")
-	plt.ylabel("Número de mensajes")
-	plt.show()
 
+	# graphs message frequency on each month of the year
 	plt.bar([i for i in range(1, 13)], month_count, align='center')
 	plt.xlabel("Mes")
 	plt.ylabel("Número de mensajes")
 	plt.show()
+
 	punchcard_matrix(date_array[["weekday", "hour"]])
 
 
+# detects the start of every message (with the dates logic). Appends all lines into a single place which is
+# finally splitted with the start_line character.
 def set_data(file):
 	day = initial_day
 	month = initial_month
@@ -76,10 +90,14 @@ def set_data(file):
 	return mfile.split(start_line)
 
 
+# creates the feature matrix, splitting each message line into its components
+# structures data into the returned matrix
+# includes date(day, month, year), time, sender name and message
 def get_attributes(data):
 	matrix = []
 	count = 0
 
+	# determines which lines are not taken into account
 	for line in data:
 		accept_line = True
 		for word in forbidden_keywords:
@@ -110,6 +128,8 @@ def get_attributes(data):
 	return matrix
 
 
+# transforms each day int a relative number with respect to the initial date.
+# includes the hour column for the punchcard graph
 def get_date_array(matrix):
 	dates = pandas.DataFrame(columns=["date_dist", "hour"])
 	current_index = 1
@@ -118,6 +138,8 @@ def get_date_array(matrix):
 	year = matrix[0][2]
 
 	for i in matrix:
+		# calculates relative date distance with respect to the last entered date and sums it to the count
+		# saves process by not calculating the distance with respect to the initial date, but with each one's previous
 		current_index += date_manager.date_distance(day, month, year, date_manager.date_to_str(i[0], i[1], i[2]))
 		df = pandas.DataFrame([[current_index, i[3].split(":")[0]]], columns=["date_dist", "hour"])
 		dates = dates.append(df)
@@ -155,6 +177,7 @@ def get_word_count(matrix, word):
 	return count
 
 
+# takes in the date_array, creates the matrix input for the punchcard graph and exports it to csv file
 def punchcard_matrix(matrix):
 	punch_matrix = pandas.DataFrame([[0 for _ in range(24)] for _ in range(7)])
 	for index, row in matrix.iterrows():
