@@ -4,7 +4,7 @@ This project aims to give some stats of conversations in the whatsapp applicatio
 
 **1.** Daily message frequency. Tells how many messages are sent every day.
 
-**2. ** Month frequency. For each month counts the number of messages sent.
+**2.** Month frequency. For each month counts the number of messages sent.
 
 **3.** Day of week frequency. 
 
