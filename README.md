@@ -3,12 +3,15 @@
 This project aims to give some stats of conversations in the whatsapp application chats. It gives 6 insights into the chat:
 
 **1.** Daily message frequency. Tells how many messages are sent every day.
+
 **2. ** Month frequency. For each month counts the number of messages sent.
+
 **3.** Day of week frequency. 
 
 The above 3 elements are shown in a graph.
 
 **4.**  For each person in the chat, counts number of messages sent by each.
+
 **5.** Counts the ocurrences of certain words. 
 
 The later 2 are printed in console output. 
