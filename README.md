@@ -16,7 +16,7 @@ The above 3 elements are shown in a graph.
 
 **5.** Counts the ocurrences of certain words. 
 
-The later 2 are printed in console output. 
+The latter 2 are printed in console output. 
 
 **6.** Day of week-time of day punchcard. 
 
