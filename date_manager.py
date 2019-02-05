@@ -1,57 +1,34 @@
-date_config = 1
+import datetime
+date_config = 0
 
 
 # creates a list of consequent dates starting from the given input date
 def from_date(day, month, year):
-	date_list = []
-
 	for _ in range(100):
-		date_list.append(date_to_str(day, month, year))
+		yield date_to_str(day, month, year)
 		day, month, year = next_date(day, month, year)
-
-	return date_list
 
 
 # returns date of the next day of a given input date using calendar logic
 def next_date(day, month, year):
-	months_30 = [4, 6, 9, 11]
-
-	day += 1
-
-	if day == 32 or \
-			(day == 31 and month in months_30) or \
-			(day == 29 and month == 2 and year % 4 != 0) or \
-			(day == 30 and month == 2 and year % 4 == 0):
-		day = 1
-		month += 1
-
-	if month == 13:
-		month = 1
-		year += 1
-
-	return day, month, year
+	final_date = datetime.date(year, month, day) + datetime.timedelta(1)
+	return final_date.day, final_date.month, final_date.year
 
 
 def date_to_str(day, month, year):
-	if date_config == 0:
-		return str(month) + "/" + str(day) + "/" + str(year)
-	else:
-		return str(day) + "/" + (str(month) if month > 9 else ("0" + str(month))) + "/" + str(year)
+	date = [str(day), str(month), str(year)]
+	return "/".join([date[1-date_config], date[date_config], date[2]])
 
 
 # returns day, month and year of date string
-def goto_date(day, month, year, objective):
-	while True:
-		if date_to_str(day, month, year) == objective:
-			return day, month, year
-		day, month, year = next_date(day, month, year)
+def goto_date(objective):
+	split = list(map(lambda it: int(it), objective.split("/")))
+	return split[1 - date_config], split[date_config], split[2]
 
 
 # returns number of days between two dates
 def date_distance(day, month, year, objective):
-	count = 0
-	while True:
-		if date_to_str(day, month, year) == objective:
-			return count
-		count += 1
-		day, month, year = next_date(day, month, year)
+	d1 = datetime.date(year, month, day)
+	split = goto_date(objective)
+	d2 = datetime.date(year=split[0], month=split[1], day=split[2])
+	return (d2 - d1).days
