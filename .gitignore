@@ -1,2 +1,5 @@
 *.txt
 Punchcard/
+.idea/
+.idea
+__pycache__/
